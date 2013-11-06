@@ -3,13 +3,16 @@ favicon-cheat-sheet
 
 A painfully obsessive cheat sheet to favicon sizes/types. Compiled from:
 
+* http://mathiasbynens.be/notes/rel-shortcut-icon <-- special thanks `@mathiasbynens`_
+* http://mathiasbynens.be/notes/touch-icons <-- special thanks `@mathiasbynens`_
 * http://www.jonathantneal.com/blog/understand-the-favicon/
 * https://en.wikipedia.org/wiki/Favicon.ico
 * http://snook.ca/archives/design/making_a_good_favicon
 * http://www.netmagazine.com/features/create-perfect-favicon
-* http://mathiasbynens.be/notes/touch-icons
 * http://www.ravelrumba.com/blog/android-apple-touch-icon/
 * http://msdn.microsoft.com/en-us/library/ie/gg491740(v=vs.85).aspx
+
+.. _`@mathiasbynens`: https://github.com/mathiasbynens
 
 The HTML
 --------
@@ -17,20 +20,11 @@ The HTML
 Basics
 ~~~~~~
 
-Insert into `<head>`:
+For the main favicon itself, it's best for cross-browser compatibility not to
+use any HTML. Just name the file `favicon.ico` and place it in the root of your
+domain. [1]_ [2]_
 
-    .. code-block:: html
-
-        <link rel="icon" sizes="16x16 32x32" href="/path/to/favicon.ico">
-        <!--[if IE]><link rel="shortcut icon" href="/path/to/favicon.ico"><![endif]-->
-
-This is optimized for the best experience in every desktop browser:
-
- * Most browsers use the standard HTML5-style line 1.
- * IE 9 and below will use line 2, the inner part of which follows the spec in http://msdn.microsoft.com/en-us/library/ie/gg491740(v=vs.85).aspx
- * Note: IE 10 doesn't support conditional comments. There is no documentation
-   on whether IE 10 has HTML5-style icon declaration support. TODO: verify
-   whether IE 10 will use line 1.
+This works in every desktop browser/version all the way back to IE6, except for SeaMonkey. [1]_
 
 Optional But Encouraged
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -42,7 +36,7 @@ You probably also want the following:
     .. code-block:: html
 
         <link rel="apple-touch-icon-precomposed" href="path/to/favicon-152.png">
-
+   
 2. IE 10 Metro tile icon (Metro equivalent of apple-touch-icon):
 
     .. code-block:: html
@@ -57,7 +51,7 @@ Very Optional, for the Obsessive
 
 If you're obsessive, you want all this too:
 
-1. Largest to smallest apple-touch-icons:
+1. Largest to smallest apple-touch-icons [3]_:
 
     .. code-block:: html
 
@@ -78,7 +72,6 @@ If you're obsessive, you want all this too:
 
         <!-- For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
         <link rel="apple-touch-icon-precomposed" href="/path/to/favicon-57.png">
-
 
 2. Favicons targeted to any additional png sizes that you add that aren't covered above:
 
@@ -124,19 +117,21 @@ Size    Name            Purpose
 144x144 favicon-144.png IE10 Metro tile for pinned site
 152x152 favicon-152.png iPad retina touch icon (Change for iOS 7: up from 144x144)
 195x195 favicon-195.png Opera Speed Dial icon
+228x228 favicon-228.png Opera Coast icon
 ======= =============== =======================================================================
 
 ICO File
 --------
 
-An .ico file contains an icon at multiple sizes. In favicon.ico, create at least these:
+An .ico file is a container for multiple .bmp or .png icons of different sizes.
+In favicon.ico, create at least these:
 
 ======= =======================================================================
 Size    Purpose
 ======= =======================================================================
 16x16   IE9 address bar, Pinned site Jump List/Toolbar/Overlay
 32x32   New tab page in IE, taskbar button in Win 7+, Safari Read Later sidebar
-64x64   Windows site icons [*]_, Safari Read Later sidebar in HiDPI/Retina
+48x48   Windows site icons [4]_
 ======= =======================================================================
 
 If you're obsessive and don't mind 1-3kb extra size, also include these sizes
@@ -145,49 +140,79 @@ in your .ico:
 ======= =======================================================================
 Size    Purpose
 ======= =======================================================================
-48x48   Windows site icons [*]_
+24x24   IE9 Pinned site browser UI
+64x64   Windows site icons [4]_, Safari Reading List sidebar in HiDPI/Retina
 ======= =======================================================================
 
-.. [*] No specifics given by MSDN.
+Create your .ico out of optimized .png files.
+
+TODO: get confirmation that IE9+ supports .ico files that contain .png files (issue `#9`_)
+
+.. _`#9`: https://github.com/audreyr/favicon-cheat-sheet/issues/9
 
 Helpful Tools
 -------------
 
-I haven't tried them all, so use at your own risk.
+I recommend:
 
+1. OptiPNG, to optimize .png files before putting them into an .ico: http://optipng.sourceforge.net/
+2. ImageMagick, to create an .ico from .png files: http://blog.morzproject.com/convert-multiple-png-images-into-a-single-icon-file/ & http://www.imagemagick.org/Usage/thumbnails/#favicon
+
+Others that I haven't tried:
+
+* Ubuntu/Debian package `icoutil` has an icotool program which creates .ico from .png files.
 * MSDN recommends this web-based .ico creator: http://www.xiconeditor.com
 * Resize favicons: http://faviconer.com
 * More resizing: https://github.com/abrkn/icon
-* Creating .ico files: http://www.imagemagick.org/Usage/thumbnails/#favicon
 * Dynamically setting favicons: https://github.com/HenrikJoreteg/favicon-setter
 * Fancy favicon tricks: https://github.com/component/piecon
 * Web Icon - a simple shell script that generates favicon and touch icons: https://github.com/emarref/webicon
+* Icon Slate app (OS X): https://itunes.apple.com/us/app/icon-slate/id439697913
+* png2ico wrapper for ImageMagick: https://github.com/bebraw/png2ico
 
 Forcing a Favicon Refresh
 -------------------------
 
-* For yourself: Clear the browser cache (Ctrl+F5 or Ctrl+Shift+R).
+Not normally needed. This is only for those frustrating times when you can't
+get your favicon to refresh, during development:
 
-  - Also close and reopen browser if IE.
-  - If still stuck, try opening new tab. Or see http://stackoverflow.com/questions/2208933/how-do-i-force-a-favicon-refresh
-
-* For yourself and all site visitors: Append a query string. (TODO: find out if any
-  browsers have problems with this.)
+* Clear the browser cache (Ctrl+F5 or Ctrl+Shift+R).
+* Also close and reopen browser if IE.
+* If still stuck, try opening new tab. Or see http://stackoverflow.com/questions/2208933/how-do-i-force-a-favicon-refresh
+* Temporarily add explicit HTML markup and append a query string. Remove
+  this when you're done:
 
     .. code-block:: html
 
         <link rel="shortcut icon" href="http://www.yoursite.com/favicon.ico?v=2" />
-        
-* Some proxies and load balancers can fail to read query strings in edge cases. For large versioned deployments, put your version number in the filename. 
+        <link rel="icon" sizes="16x16 32x32" href="/favicon.ico?v=2">
+
+For large versioned deployments, if all site visitors need their favicon
+force-refreshed in an extreme situation:
+
+* Add explicit HTML markup (customize the sizes part) and put your version
+  number in the filename.
 
     .. code-block:: html
 
-        <link rel="shortcut icon" href="http://www.yoursite.com/favicon-v2.ico" />
+        <link rel="shortcut icon" href="/favicon-v2.ico" />
+        <link rel="icon" sizes="16x16 32x32" href="/favicon-v2.ico">
+
+  TODO: find edge cases where this markup doesn't work (issue `#3`_).
+
+.. _`#3`: https://github.com/audreyr/favicon-cheat-sheet/issues/3
+
 FAQ
 ---
 
-**Why use png in addition to ico?**
+**What about having both a default root favicon.ico and favicon.png?**
+I think it's actually better to provide only `favicon.ico` and not `favicon.png`, because:
 
+* An `.ico` is a container for multiple `.bmp` or `.png` files. If you specify 1 default `favicon.png`, and if that `favicon.png` overrides the `favicon.ico`, you are giving up control over how the favicon looks at different resolutions and allowing the browser to do all resizing. For example, you might want the 64x64 version to contain text and the 16x16 version to not display the text at all, since at 16x16 it would be unreadable anyway.
+* There is no `favicon.png` in the HTML5 specification, just `/favicon.ico`. From http://www.w3.org/TR/html5/links.html#rel-icon:
+   - 'In the absence of a link with the icon keyword, for Documents obtained over HTTP or HTTPS, user agents may instead attempt to fetch and use an icon with the absolute URL obtained by resolving the URL "/favicon.ico" against the document's address, as if the page had declared that icon using the icon keyword.'
+
+More about this in http://stackoverflow.com/questions/1344122/favicon-png-vs-favicon-ico-why-should-i-use-pngs-instead-of-icos/1344379#1344379 (Note: the text in the chosen answer about alpha transparency is incorrect. See the 2nd answer.)
 
 **Is it true that favicons should be in the site root?**
 No, that's only if you don't explicitly specify the browser/device-specific
@@ -227,8 +252,20 @@ Boilerplate) rely on this assumption, but:
 Some Firefox versions require absolute paths. Since all browsers support them,
 it's the simplest choice.
 
+**Why not append a query string to force-refresh for all visitors?**
+Some proxies and load balancers can fail to read query strings in edge cases.
+
 Contribute!
 -----------
 
 Send pull requests if you have anything to add/change, providing citations
 and justification. I'd love to see this improve.
+
+References
+----------
+
+.. [1] http://mathiasbynens.be/notes/rel-shortcut-icon
+.. [2] http://www.w3.org/html/wg/drafts/html/CR/links.html#rel-icon
+.. [3] Adapted from http://mathiasbynens.be/notes/touch-icons
+.. [4] No specifics given by MSDN.
+.. [5] http://blog.morzproject.com/convert-multiple-png-images-into-a-single-icon-file/
